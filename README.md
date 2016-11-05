@@ -1,12 +1,12 @@
 # Name That Color
-A VS Code Plugin to convert hex color representation into friendly names. It is built upon Chirag Mehta's [ntc.js](http://chir.ag/projects/ntc/).
+A VS Code Plugin to convert hex color representation into friendly names built upon Chirag Mehta's [ntc.js](http://chir.ag/projects/ntc/).
 
 
 ## Features
-* get a friendly name from hex color representation
-* generate Sass variable name from hex color representation
-* deals with close hex color representations (return the same name)
-* works with single or multiple selections
+* Get a friendly name from hex color representation
+* Generate Sass variable name from hex color representation
+* Deals with close hex color representations (return the same name)
+* Works with single or multiple selections
 
 
 ## Usage
@@ -14,23 +14,28 @@ A VS Code Plugin to convert hex color representation into friendly names. It is 
 ### Get color name
 * Select a Hex color representation
 * From the command palette Ctrl-Shift-P (Windows, Linux) or Cmd-Shift-P (OSX),
-* Select Name that color : Get color name
-\!\[feature X\]\(images/feature-x.png\)
+* Select Name that color : get color name
+
+\!\[feature get color name\]\(images/feature-get.png\)
 
 ### Replace selectin with color name
 * Select a Hex color representation
 * From the command palette Ctrl-Shift-P (Windows, Linux) or Cmd-Shift-P (OSX),
-* Select Name that color : Replace selection
-\!\[feature X\]\(images/feature-x.png\)
+* Select Name that color : replace selection
+
+\!\[feature replace hex code with friendly name\]\(images/feature-replace.png\)
 
 ### Generate Sass variable
 * Select a Hex color representation
 * From the command palette Ctrl-Shift-P (Windows, Linux) or Cmd-Shift-P (OSX),
-* Select Name that color : Generate Sass variable
-\!\[feature X\]\(images/feature-x.png\)
+* Select Name that color : generate Sass variable
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
-\!\[feature X\]\(images/feature-x.png\)
+\!\[feature generate sass variable\]\(images/feature-sassvar.png\)
+
+> Tip: It works for multiple selection as well.
+
+\!\[feature multiple selection\]\(images/feature-multiple.png\)
+
 
 ## Installation
 If you have any requirements or dependencies, add a section describing those and how to install and configure them.
@@ -47,8 +52,17 @@ If you have any requirements or dependencies, add a section describing those and
 Initial release.
 
 
+## Source
+[GitHub](https://github.com/guillaumedoutriaux/name-that-color)
+
+
+## Contribute
+If you have any problem, idea or suggestion, feel free to create issues and pull requests on [GitHub](https://github.com/guillaumedoutriaux/name-that-color).
+
 ### Credit
 Chirag Mehta [http://chir.ag](http://chir.ag)
+
+Guillaume Doutriaux (@gdoutriaux)
 
 
 ### License

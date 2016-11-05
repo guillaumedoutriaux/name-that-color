@@ -36,13 +36,13 @@
         "commands": [
             {
             "command": "extension.ntcGet",
-            "title":   "Name that color : Get color name"
+            "title":   "Name that color : et color name"
             },{
             "command": "extension.ntcReplace",
-            "title":   "Name that color : Replace selection"
+            "title":   "Name that color : replace selection"
             },{
             "command": "extension.ntcSassVar",
-            "title":   "Name that color : Generate Sass variable"
+            "title":   "Name that color : generate Sass variable"
             }
         ]
     },
