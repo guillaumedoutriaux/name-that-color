@@ -1,7 +1,7 @@
 {
     "name":        "name-that-color",
     "displayName": "Name That Color",
-    "description": "Get a friendly name from a Hex color.",
+    "description": "Get a friendly name from a Hex color representation.",
     "version":     "0.0.1",
     "publisher":   "guillaumedoutriaux",
 	"license":     "SEE LICENSE IN LICENSE.md",
@@ -36,7 +36,7 @@
         "commands": [
             {
             "command": "extension.ntcGet",
-            "title":   "Name that color : et color name"
+            "title":   "Name that color : get color name"
             },{
             "command": "extension.ntcReplace",
             "title":   "Name that color : replace selection"

@@ -16,25 +16,25 @@ A VS Code Plugin to convert hex color representation into friendly names built u
 * From the command palette Ctrl-Shift-P (Windows, Linux) or Cmd-Shift-P (OSX),
 * Select Name that color : get color name
 
-\!\[feature get color name\]\(images/feature-get.png\)
+\!\[feature get color name\]\(https://github.com/guillaumedoutriaux/name-that-color/raw/master/images/feature-get.gif\)
 
 ### Replace selectin with color name
 * Select a Hex color representation
 * From the command palette Ctrl-Shift-P (Windows, Linux) or Cmd-Shift-P (OSX),
 * Select Name that color : replace selection
 
-\!\[feature replace hex code with friendly name\]\(images/feature-replace.png\)
+\!\[feature replace hex code with friendly name\]\(https://github.com/guillaumedoutriaux/name-that-color/raw/master/images/feature-replace.gif\)
 
 ### Generate Sass variable
 * Select a Hex color representation
 * From the command palette Ctrl-Shift-P (Windows, Linux) or Cmd-Shift-P (OSX),
 * Select Name that color : generate Sass variable
 
-\!\[feature generate sass variable\]\(images/feature-sassvar.png\)
+\!\[feature generate sass variable\]\(https://github.com/guillaumedoutriaux/name-that-color/raw/master/images/feature-sassvar.gif\)
 
 > Tip: It works for multiple selection as well.
 
-\!\[feature multiple selection\]\(images/feature-multiple.png\)
+\!\[feature multiple selection\]\(https://github.com/guillaumedoutriaux/name-that-color/raw/master/images/feature-multiple.gif\)
 
 
 ## Installation
