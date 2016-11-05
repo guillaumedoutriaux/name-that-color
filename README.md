@@ -16,25 +16,25 @@ A VS Code Plugin to convert hex color representation into friendly names built u
 * From the command palette Ctrl-Shift-P (Windows, Linux) or Cmd-Shift-P (OSX),
 * Select Name that color : get color name
 
-\!\[feature get color name\]\(https://github.com/guillaumedoutriaux/name-that-color/raw/master/images/feature-get.gif\)
+![feature get color name](https://github.com/guillaumedoutriaux/name-that-color/raw/master/images/feature-get.gif)
 
 ### Replace selectin with color name
 * Select a Hex color representation
 * From the command palette Ctrl-Shift-P (Windows, Linux) or Cmd-Shift-P (OSX),
 * Select Name that color : replace selection
 
-\!\[feature replace hex code with friendly name\]\(https://github.com/guillaumedoutriaux/name-that-color/raw/master/images/feature-replace.gif\)
+![feature replace hex code with friendly name](https://github.com/guillaumedoutriaux/name-that-color/raw/master/images/feature-replace.gif)
 
 ### Generate Sass variable
 * Select a Hex color representation
 * From the command palette Ctrl-Shift-P (Windows, Linux) or Cmd-Shift-P (OSX),
 * Select Name that color : generate Sass variable
 
-\!\[feature generate sass variable\]\(https://github.com/guillaumedoutriaux/name-that-color/raw/master/images/feature-sassvar.gif\)
+![feature generate sass variable](https://github.com/guillaumedoutriaux/name-that-color/raw/master/images/feature-sassvar.gif)
 
 > Tip: It works for multiple selection as well.
 
-\!\[feature multiple selection\]\(https://github.com/guillaumedoutriaux/name-that-color/raw/master/images/feature-multiple.gif\)
+![feature multiple selection](https://github.com/guillaumedoutriaux/name-that-color/raw/master/images/feature-multiple.gif)
 
 
 ## Installation
