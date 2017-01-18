@@ -48,6 +48,8 @@ If you have any requirements or dependencies, add a section describing those and
 
 
 ## Release Notes
+### 0.1.1
+Update Readme.
 ### 0.1.0
 Improve selection (works with or without #).
 ### 0.0.1
