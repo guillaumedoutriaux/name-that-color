@@ -19,5 +19,9 @@ export function activate(context: vscode.ExtensionContext) {
 		uiAction.trigger('sassVar');
 	});
 
-	context.subscriptions.push(disposableGet, disposableReplace, disposableSassVar);
+	const disposableCssVar = vscode.commands.registerCommand('extension.ntcCssVar', () => {
+		uiAction.trigger('cssVar');
+	});
+
+	context.subscriptions.push(disposableGet, disposableReplace, disposableSassVar, disposableCssVar);
 }

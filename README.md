@@ -32,6 +32,13 @@ A VS Code Plugin to convert hex color representation into friendly names built u
 
 ![feature generate sass variable](https://github.com/guillaumedoutriaux/name-that-color/raw/master/images/feature-sassvar.gif)
 
+### Generate CSS variable
+* Select a Hex color representation
+* From the command palette Ctrl-Shift-P (Windows, Linux) or Cmd-Shift-P (OSX),
+* Select Name that color : generate CSS variable
+
+![feature generate css variable](https://github.com/guillaumedoutriaux/name-that-color/raw/master/images/feature-cssvar.gif)
+
 > Tip: It works for multiple selection as well.
 
 ![feature multiple selection](https://github.com/guillaumedoutriaux/name-that-color/raw/master/images/feature-multiple.gif)
@@ -48,6 +55,8 @@ If you have any requirements or dependencies, add a section describing those and
 
 
 ## Release Notes
+### 0.1.2
+Added CSS variables support.
 ### 0.1.1
 Update Readme.
 ### 0.1.0

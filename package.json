@@ -2,7 +2,7 @@
     "name": "name-that-color",
     "displayName": "Name That Color",
     "description": "Get a friendly name from a Hex color representation.",
-    "version": "0.1.0",
+    "version": "0.1.2",
     "publisher": "guillaumedoutriaux",
     "license": "SEE LICENSE IN LICENSE.md",
     "icon": "images/icon.png",
@@ -13,6 +13,7 @@
     "keywords": [
         "color",
         "sass",
+        "css",
         "color name",
         "hexadecimal"
     ],
@@ -29,7 +30,8 @@
     "activationEvents": [
         "onCommand:extension.ntcGet",
         "onCommand:extension.ntcReplace",
-        "onCommand:extension.ntcSassVar"
+        "onCommand:extension.ntcSassVar",
+        "onCommand:extension.ntcCssVar"
     ],
     "main": "./out/src/extension",
     "contributes": {
@@ -45,6 +47,10 @@
             {
                 "command": "extension.ntcSassVar",
                 "title": "Name that color : generate Sass variable"
+            },
+            {
+                "command": "extension.ntcCssVar",
+                "title": "Name that color : generate CSS variable"
             }
         ]
     },
