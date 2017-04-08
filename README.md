@@ -76,6 +76,7 @@ If you have any problem, idea or suggestion, feel free to create issues and pull
 Chirag Mehta [http://chir.ag](http://chir.ag)
 
 Guillaume Doutriaux (@gdoutriaux)
+Przemysław Adamczewski (CSS Variables)
 
 
 ### License
