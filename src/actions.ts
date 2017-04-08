@@ -73,6 +73,14 @@ class Actions {
 			builder.insert(endOfSelection, ';');
 		}
 
+		else if(type === 'cssVar'){
+			
+			const startOfSelection = hex.charAt(0) === '#' ? selection.start : selection.start.translate(0, -1);
+			const endOfSelection   = selection.end;
+			builder.insert(startOfSelection, `--${colorName[2]}: `);
+			builder.insert(endOfSelection, ';');
+		}
+
 	}
 	
 }
