@@ -58,11 +58,16 @@
       "title": "name-that-color",
       "properties": {
         "name-that-color.text": {
-          "type": [
-            "-",
-            "_"
+          "type": "string",
+          "default": "hyphen (-)",
+          "enum": [
+            "Hyphen (-)",
+            "Underscore (_)"
           ],
-          "default": "-",
+          "enumDescriptions": [
+            "Use hyphen (-) in variables names (e.g. $my-var-name)",
+            "Use underscore (_) in variables names (e.g. $my_var_name)"
+          ],
           "description": "Delimiter used for variables names"
         }
       }
