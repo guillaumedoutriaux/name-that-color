@@ -52,7 +52,21 @@
         "command": "extension.ntcCssVar",
         "title": "Name that color : generate CSS variable"
       }
-    ]
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "name-that-color",
+      "properties": {
+        "name-that-color.text": {
+          "type": [
+            "-",
+            "_"
+          ],
+          "default": "-",
+          "description": "Delimiter used for variables names"
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
