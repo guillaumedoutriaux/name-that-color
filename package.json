@@ -55,20 +55,20 @@
     ],
     "configuration": {
       "type": "object",
-      "title": "name-that-color",
+      "title": "Name that color",
       "properties": {
-        "name-that-color.text": {
+        "name-that-color.delimiter": {
           "type": "string",
-          "default": "hyphen (-)",
+          "default": "Hyphen",
           "enum": [
-            "Hyphen (-)",
-            "Underscore (_)"
+            "Hyphen",
+            "Underscore"
           ],
           "enumDescriptions": [
             "Use hyphen (-) in variables names (e.g. $my-var-name)",
             "Use underscore (_) in variables names (e.g. $my_var_name)"
           ],
-          "description": "Delimiter used for variables names"
+          "description": "Replacement character used for variables names"
         }
       }
     }
