@@ -64,6 +64,10 @@ If you have any requirements or dependencies, add a section describing those and
 
 ## Release Notes
 
+### 0.1.3
+
+Add option in Settings to change the delimiter used in variable name.
+
 ### 0.1.2
 
 Added CSS variables support.
