@@ -22,7 +22,7 @@
     "url": "https://github.com/guillaumedoutriaux/name-that-color/issues"
   },
   "engines": {
-    "vscode": "^1.5.0"
+    "vscode": "^1.34.0"
   },
   "categories": [
     "Other"
