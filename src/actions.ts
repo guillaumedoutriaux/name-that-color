@@ -1,12 +1,6 @@
 import * as vscode from "vscode";
-import NameThatColor from "./name-that-color";
-
-const enum ColorType {
-  HEX = "hex",
-  RGB = "rgb",
-  HSL = "hsl",
-  UNKNOW = "unknown",
-}
+import { ColorType } from "./models";
+import { NameThatColor } from "./name-that-color";
 
 class Actions {
   private nameThatColor: NameThatColor;
@@ -26,13 +20,14 @@ class Actions {
       const selections: vscode.Selection[] = editor.selections;
       for (const selection of selections) {
         const userInput = editor.document.getText(selection);
+        const colorType = this.getColorType(userInput);
 
-        if (this.getColorType(userInput) === ColorType.UNKNOW) {
-          const message = `Sorry but '#${userInput}' doesn't seem to be a valid color representation. Only possible values are hex, RGB or HSL.`;
+        if (colorType === ColorType.UNKNOW) {
+          const message = `Sorry but '${userInput}' doesn't seem to be a valid color representation. Only possible values are hex, RGB or HSL.`;
           vscode.window.showErrorMessage(message);
           return; // Invalid hex color
         }
-        this.dispatchActions(type, userInput, selection, builder);
+        this.dispatchActions(type, userInput, colorType, selection, builder);
       }
     });
   }
@@ -59,18 +54,23 @@ class Actions {
 
   private dispatchActions(
     type: string,
-    hex: string,
+    color: string,
+    colorType: ColorType,
     selection: vscode.Selection,
     builder: vscode.TextEditorEdit
   ) {
-    const colorName = this.nameThatColor.getName(hex);
+    const colorName = this.nameThatColor.getName(color, colorType);
+    console.log(
+      "🚀 ~ file: actions.ts ~ line 67 ~ Actions ~ colorName",
+      colorName
+    );
 
     if (type === "get") {
       const message = `#${colorName[0]} is ${colorName[1]} or even #${colorName[2]}.`;
       vscode.window.showInformationMessage(message);
     } else if (type === "replace") {
       const startOfSelection =
-        hex.charAt(0) === "#"
+        color.charAt(0) === "#"
           ? selection.start
           : selection.start.translate(0, -1);
       const endOfSelection = selection.end;
@@ -81,7 +81,7 @@ class Actions {
       builder.replace(extendedSelection, `${colorName[2]}`);
     } else if (type === "sassVar") {
       const startOfSelection =
-        hex.charAt(0) === "#"
+        color.charAt(0) === "#"
           ? selection.start
           : selection.start.translate(0, -1);
       const endOfSelection = selection.end;
@@ -89,7 +89,7 @@ class Actions {
       builder.insert(endOfSelection, ";");
     } else if (type === "cssVar") {
       const startOfSelection =
-        hex.charAt(0) === "#"
+        color.charAt(0) === "#"
           ? selection.start
           : selection.start.translate(0, -1);
       const endOfSelection = selection.end;
