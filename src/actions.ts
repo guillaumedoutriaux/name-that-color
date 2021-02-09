@@ -38,16 +38,12 @@ class Actions {
     const hslPattern = /^hsl\((0|360|35\d|3[0-4]\d|[12]\d\d|0?\d?\d),(0|100|\d{1,2})%,(0|100|\d{1,2})%\)$/i;
 
     if (hexPattern.test(input)) {
-      // console.log("color is hex");
       return ColorType.HEX;
     } else if (rgbPattern.test(input)) {
-      // console.log("color is rgb");
       return ColorType.RGB;
     } else if (hslPattern.test(input)) {
-      // console.log("color is hsl");
       return ColorType.HSL;
     } else {
-      // console.log("color is undefined");
       return ColorType.UNKNOW;
     }
   }
