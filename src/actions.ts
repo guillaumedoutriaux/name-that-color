@@ -9,10 +9,10 @@ const enum ColorType {
 }
 
 class Actions {
-  private _nameThatColor: NameThatColor;
+  private nameThatColor: NameThatColor;
 
   constructor() {
-    this._nameThatColor = new NameThatColor();
+    this.nameThatColor = new NameThatColor();
   }
 
   public trigger(type: string): void {
@@ -32,7 +32,7 @@ class Actions {
           vscode.window.showErrorMessage(message);
           return; // Invalid hex color
         }
-        this._dispatchActions(type, userInput, selection, builder);
+        this.dispatchActions(type, userInput, selection, builder);
       }
     });
   }
@@ -57,13 +57,13 @@ class Actions {
     }
   }
 
-  private _dispatchActions(
+  private dispatchActions(
     type: string,
     hex: string,
     selection: vscode.Selection,
     builder: vscode.TextEditorEdit
   ) {
-    const colorName = this._nameThatColor.getName(hex);
+    const colorName = this.nameThatColor.getName(hex);
 
     if (type === "get") {
       const message = `#${colorName[0]} is ${colorName[1]} or even #${colorName[2]}.`;
