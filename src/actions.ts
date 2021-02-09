@@ -1,6 +1,13 @@
 import * as vscode from "vscode";
 import NameThatColor from "./name-that-color";
 
+const enum ColorType {
+  HEX = "hex",
+  RGB = "rgb",
+  HSL = "hsl",
+  UNKNOW = "unknown",
+}
+
 class Actions {
   private _nameThatColor: NameThatColor;
 
@@ -18,29 +25,36 @@ class Actions {
     editor.edit((builder) => {
       const selections: vscode.Selection[] = editor.selections;
       for (const selection of selections) {
-        const hex = editor.document.getText(selection);
+        const userInput = editor.document.getText(selection);
 
-        if (!this._checkSelection(hex)) {
+        if (this.getColorType(userInput) === ColorType.UNKNOW) {
+          const message = `Sorry but '#${userInput}' doesn't seem to be a valid color representation. Only possible values are hex, RGB or HSL.`;
+          vscode.window.showErrorMessage(message);
           return; // Invalid hex color
         }
-        this._dispatchActions(type, hex, selection, builder);
+        this._dispatchActions(type, userInput, selection, builder);
       }
     });
   }
 
-  private _checkSelection(text: string) {
-    if (text.charAt(0) === "#") {
-      text = text.substr(1);
-    }
+  private getColorType(input: string): ColorType {
+    const hexPattern = /(^#?[a-f\d]{6}$)|(^#?[a-f\d]{3}$)/i;
+    const rgbPattern = /^rgb\((0|255|25[0-4]|2[0-4]\d|1\d\d|0?\d?\d),(0|255|25[0-4]|2[0-4]\d|1\d\d|0?\d?\d),(0|255|25[0-4]|2[0-4]\d|1\d\d|0?\d?\d)\)$/i;
+    const hslPattern = /^hsl\((0|360|35\d|3[0-4]\d|[12]\d\d|0?\d?\d),(0|100|\d{1,2})%,(0|100|\d{1,2})%\)$/i;
 
-    const pattern = /(^[0-9A-F]{6}$)|(^[0-9A-F]{3}$)/i;
-    const output = pattern.test(text);
-
-    if (!output) {
-      const message = `Sorry but '#${text}' doesn't seem to be a valid Hex color representation.`;
-      vscode.window.showErrorMessage(message);
+    if (hexPattern.test(input)) {
+      // console.log("color is hex");
+      return ColorType.HEX;
+    } else if (rgbPattern.test(input)) {
+      // console.log("color is rgb");
+      return ColorType.RGB;
+    } else if (hslPattern.test(input)) {
+      // console.log("color is hsl");
+      return ColorType.HSL;
+    } else {
+      // console.log("color is undefined");
+      return ColorType.UNKNOW;
     }
-    return output;
   }
 
   private _dispatchActions(
