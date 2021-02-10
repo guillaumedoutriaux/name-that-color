@@ -1,7 +1,7 @@
 "use strict";
 
 import * as vscode from "vscode";
-import Actions from "./actions";
+import { Actions } from "./actions";
 
 export function activate(context: vscode.ExtensionContext) {
   const uiAction: Actions = new Actions();

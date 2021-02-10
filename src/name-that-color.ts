@@ -1718,6 +1718,7 @@ export class NameThatColor {
   }
 
   private HSLToRGB(hslString: string) {
+    // https://css-tricks.com/converting-color-spaces-in-javascript/
     // s /= 100;
     // l /= 100;
     // let c = (1 - Math.abs(2 * l - 1)) * s,

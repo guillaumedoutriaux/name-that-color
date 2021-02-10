@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { ColorType } from "./models";
 import { NameThatColor } from "./name-that-color";
 
-class Actions {
+export class Actions {
   private nameThatColor: NameThatColor;
 
   constructor() {
@@ -35,14 +35,14 @@ class Actions {
   private getColorType(input: string): ColorType {
     const hexPattern = /(^#?[a-f\d]{6}$)|(^#?[a-f\d]{3}$)/i;
     const rgbPattern = /^rgb\((0|255|25[0-4]|2[0-4]\d|1\d\d|0?\d?\d),(0|255|25[0-4]|2[0-4]\d|1\d\d|0?\d?\d),(0|255|25[0-4]|2[0-4]\d|1\d\d|0?\d?\d)\)$/i;
-    const hslPattern = /^hsl\((0|360|35\d|3[0-4]\d|[12]\d\d|0?\d?\d),(0|100|\d{1,2})%,(0|100|\d{1,2})%\)$/i;
+    // const hslPattern = /^hsl\((0|360|35\d|3[0-4]\d|[12]\d\d|0?\d?\d),(0|100|\d{1,2})%,(0|100|\d{1,2})%\)$/i;
 
     if (hexPattern.test(input)) {
       return ColorType.HEX;
     } else if (rgbPattern.test(input)) {
       return ColorType.RGB;
-    } else if (hslPattern.test(input)) {
-      return ColorType.HSL;
+      // } else if (hslPattern.test(input)) {
+      //   return ColorType.HSL;
     } else {
       return ColorType.UNKNOW;
     }
@@ -56,10 +56,10 @@ class Actions {
     builder: vscode.TextEditorEdit
   ) {
     const colorName = this.nameThatColor.getName(color, colorType);
-    console.log(
-      "🚀 ~ file: actions.ts ~ line 67 ~ Actions ~ colorName",
-      colorName
-    );
+    // console.log(
+    //   "🚀 ~ file: actions.ts ~ line 67 ~ Actions ~ colorName",
+    //   colorName
+    // );
 
     if (type === "get") {
       const message = `#${colorName[0]} is ${colorName[1]} or even #${colorName[2]}.`;
@@ -94,5 +94,3 @@ class Actions {
     }
   }
 }
-
-export default Actions;
