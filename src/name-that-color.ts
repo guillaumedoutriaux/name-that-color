@@ -1592,11 +1592,11 @@ export class NameThatColor {
   public getName(
     rawColor: string,
     from: ColorType = ColorType.HEX
-  ): Array<any> {
+  ): Array<string> {
     if (from === ColorType.RGB) {
-      let color = this.RGBToHex(rawColor);
-    } else if (from === ColorType.HSL) {
+      rawColor = this.RGBToHex(rawColor);
     }
+    // else if (from === ColorType.HSL) {}
     let color = rawColor.toUpperCase();
 
     if (color.length % 3 == 0) {
@@ -1700,21 +1700,21 @@ export class NameThatColor {
   }
 
   private RGBToHex(color: string): string {
-    const rawColorString = color.split(",");
+    // Choose correct separator between comma and space
+    const separator = color.indexOf(",") > -1 ? "," : " ";
 
-    // rgb(number --> number
-    let r = (+rawColorString[0].split("(")[1]).toString(16);
+    // Turn "rgb(r,g,b)" into [r,g,b]
+    const rawColorString = color.substr(4).split(")")[0].split(separator);
 
-    let g = (+rawColorString[1]).toString(16);
-
-    // number) --> number
-    let b = (+rawColorString[2].slice(0, -1)).toString(16);
+    let r = Number(rawColorString[0]).toString(16);
+    let g = Number(rawColorString[1]).toString(16);
+    let b = Number(rawColorString[2]).toString(16);
 
     if (r.length == 1) r = "0" + r;
     if (g.length == 1) g = "0" + g;
     if (b.length == 1) b = "0" + b;
 
-    return "#" + r + g + b;
+    return r + g + b;
   }
 
   private HSLToRGB(hslString: string) {
