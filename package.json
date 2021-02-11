@@ -2,7 +2,7 @@
   "name": "name-that-color",
   "displayName": "Name That Color",
   "description": "Get a friendly name from a Hex color representation.",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "publisher": "guillaumedoutriaux",
   "license": "SEE LICENSE IN LICENSE.md",
   "icon": "images/icon.png",

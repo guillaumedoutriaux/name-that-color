@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 
-function utilSlugify(str: string) {
+export function utilSlugify(str: string) {
   str = str.replace(/^\s+|\s+$/g, ""); // trim
   str = str.toLowerCase();
 
@@ -21,5 +21,3 @@ function utilSlugify(str: string) {
 
   return str;
 }
-
-export default utilSlugify;

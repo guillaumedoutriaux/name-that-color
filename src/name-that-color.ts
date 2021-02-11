@@ -1,13 +1,14 @@
-import utilSlugify from "./util-slugify";
+import { ColorType } from "./models";
+import { utilSlugify } from "./util-slugify";
 
 // adapted from ntc.js from Chirag Mehta
 // http://chir.ag/projects/ntc/
 
-class NameThatColor {
-  private _names;
+export class NameThatColor {
+  private names;
 
   constructor() {
-    this._names = [
+    this.names = [
       ["000000", "Black"],
       ["000080", "Navy Blue"],
       ["0000C8", "Dark Blue"],
@@ -1576,20 +1577,27 @@ class NameThatColor {
       ["FFFFFF", "White"],
     ];
 
-    this._init();
+    this.init();
   }
 
-  private _init(): void {
-    for (const name of this._names) {
+  private init(): void {
+    for (const name of this.names) {
       const color = `#${name[0]}`;
-      const rgb = this._rgb(color);
-      const hsl = this._hsl(color);
+      const rgb = this.rgb(color);
+      const hsl = this.hsl(color);
       name.push(rgb[0], rgb[1], rgb[2], hsl[0], hsl[1], hsl[2]);
     }
   }
 
-  public getName(color: string): Array<any> {
-    color = color.toUpperCase();
+  public getName(
+    rawColor: string,
+    from: ColorType = ColorType.HEX
+  ): Array<string> {
+    if (from === ColorType.RGB) {
+      rawColor = this.RGBToHex(rawColor);
+    }
+    // else if (from === ColorType.HSL) {}
+    let color = rawColor.toUpperCase();
 
     if (color.length % 3 == 0) {
       color = `#${color}`;
@@ -1606,12 +1614,12 @@ class NameThatColor {
         color.substr(3, 1);
     }
 
-    const rgb = this._rgb(color);
+    const rgb = this.rgb(color);
     const r = rgb[0];
     const g = rgb[1];
     const b = rgb[2];
 
-    const hsl = this._hsl(color);
+    const hsl = this.hsl(color);
     const h = hsl[0];
     const s = hsl[1];
     const l = hsl[2];
@@ -1622,7 +1630,7 @@ class NameThatColor {
     let cl = -1;
     let df = -1;
 
-    for (const [index, name] of this._names.entries()) {
+    for (const [index, name] of this.names.entries()) {
       ndf1 =
         Math.pow(r - name[2], 2) +
         Math.pow(g - name[3], 2) +
@@ -1638,9 +1646,9 @@ class NameThatColor {
       }
     }
 
-    const hex = this._names[cl][0];
-    const realName = this._names[cl][1];
-    const friendlyName = utilSlugify(this._names[cl][1]);
+    const hex = this.names[cl][0];
+    const realName = this.names[cl][1];
+    const friendlyName = utilSlugify(this.names[cl][1]);
     const output = [hex, realName, friendlyName];
     return output;
   }
@@ -1648,7 +1656,7 @@ class NameThatColor {
   // adapted from: Farbtastic 1.2
   // http://acko.net/dev/farbtastic
 
-  private _hsl(color: string): Array<number> {
+  private hsl(color: string): Array<number> {
     const rgb: Array<number> = [
       Number("0x" + color.substring(1, 3)) / 255,
       Number("0x" + color.substring(3, 5)) / 255,
@@ -1683,12 +1691,67 @@ class NameThatColor {
   // adapted from: Farbtastic 1.2
   // http://acko.net/dev/farbtastic
 
-  private _rgb(color: string): Array<number> {
+  private rgb(color: string): Array<number> {
     return [
       Number("0x" + color.substring(1, 3)),
       Number("0x" + color.substring(3, 5)),
       Number("0x" + color.substring(5, 7)),
     ];
+  }
+
+  private RGBToHex(color: string): string {
+    // Choose correct separator between comma and space
+    const separator = color.indexOf(",") > -1 ? "," : " ";
+
+    // Turn "rgb(r,g,b)" into [r,g,b]
+    const rawColorString = color.substr(4).split(")")[0].split(separator);
+
+    let r = Number(rawColorString[0]).toString(16);
+    let g = Number(rawColorString[1]).toString(16);
+    let b = Number(rawColorString[2]).toString(16);
+
+    if (r.length == 1) r = "0" + r;
+    if (g.length == 1) g = "0" + g;
+    if (b.length == 1) b = "0" + b;
+
+    return r + g + b;
+  }
+
+  private HSLToRGB(hslString: string) {
+    // https://css-tricks.com/converting-color-spaces-in-javascript/
+    // s /= 100;
+    // l /= 100;
+    // let c = (1 - Math.abs(2 * l - 1)) * s,
+    //     x = c * (1 - Math.abs((h / 60) % 2 - 1)),
+    //     m = l - c/2,
+    //     r = 0,
+    //     g = 0,
+    //     b = 0;
+    // if (0 <= h && h < 60) {
+    //   r = c; g = x; b = 0;
+    // } else if (60 <= h && h < 120) {
+    //   r = x; g = c; b = 0;
+    // } else if (120 <= h && h < 180) {
+    //   r = 0; g = c; b = x;
+    // } else if (180 <= h && h < 240) {
+    //   r = 0; g = x; b = c;
+    // } else if (240 <= h && h < 300) {
+    //   r = x; g = 0; b = c;
+    // } else if (300 <= h && h < 360) {
+    //   r = c; g = 0; b = x;
+    // }
+    // // Having obtained RGB, convert channels to hex
+    // r = Math.round((r + m) * 255).toString(16);
+    // g = Math.round((g + m) * 255).toString(16);
+    // b = Math.round((b + m) * 255).toString(16);
+    // // Prepend 0s, if necessary
+    // if (r.length == 1)
+    //   r = "0" + r;
+    // if (g.length == 1)
+    //   g = "0" + g;
+    // if (b.length == 1)
+    //   b = "0" + b;
+    // return "#" + r + g + b;
   }
 }
 

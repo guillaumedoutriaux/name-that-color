@@ -1,11 +1,12 @@
 import * as vscode from "vscode";
-import NameThatColor from "./name-that-color";
+import { actionParam, ColorType, SelectionBounds } from "./models";
+import { NameThatColor } from "./name-that-color";
 
-class Actions {
-  private _nameThatColor: NameThatColor;
+export class Actions {
+  private nameThatColor: NameThatColor;
 
   constructor() {
-    this._nameThatColor = new NameThatColor();
+    this.nameThatColor = new NameThatColor();
   }
 
   public trigger(type: string): void {
@@ -18,71 +19,111 @@ class Actions {
     editor.edit((builder) => {
       const selections: vscode.Selection[] = editor.selections;
       for (const selection of selections) {
-        const hex = editor.document.getText(selection);
+        const color = editor.document.getText(selection);
+        const colorType = this.getColorType(color);
+        console.log(
+          "🚀 ~ file: actions.ts ~ line 24 ~ Actions ~ editor.edit ~ colorType",
+          colorType
+        );
 
-        if (!this._checkSelection(hex)) {
-          return; // Invalid hex color
+        if (colorType === ColorType.UNKNOW) {
+          const message = `Sorry but '${color}' is not a valid color representation. Supported values are hex and RGB.`;
+          vscode.window.showErrorMessage(message);
+          return;
         }
-        this._dispatchActions(type, hex, selection, builder);
+
+        this.dispatchActions({ type, color, colorType, selection, builder });
       }
     });
   }
 
-  private _checkSelection(text: string) {
-    if (text.charAt(0) === "#") {
-      text = text.substr(1);
-    }
+  private getColorType(input: string): ColorType {
+    // #ccc or #cccccc
+    const hexPattern = /(^#?[a-f\d]{6}$)|(^#?[a-f\d]{3}$)/i;
 
-    const pattern = /(^[0-9A-F]{6}$)|(^[0-9A-F]{3}$)/i;
-    const output = pattern.test(text);
+    // rgb(0,0,0) or rgb(0 0 0) + 0-255
+    const rgbPattern = /^rgb\((0|255|25[0-4]|2[0-4]\d|1\d\d|0?\d?\d)[, ](0|255|25[0-4]|2[0-4]\d|1\d\d|0?\d?\d)[, ](0|255|25[0-4]|2[0-4]\d|1\d\d|0?\d?\d)\)$/i;
+    // const hslPattern = /^hsl\((0|360|35\d|3[0-4]\d|[12]\d\d|0?\d?\d),(0|100|\d{1,2})%,(0|100|\d{1,2})%\)$/i;
 
-    if (!output) {
-      const message = `Sorry but '#${text}' doesn't seem to be a valid Hex color representation.`;
-      vscode.window.showErrorMessage(message);
+    if (hexPattern.test(input)) {
+      return ColorType.HEX;
+    } else if (rgbPattern.test(input)) {
+      return ColorType.RGB;
+      // } else if (hslPattern.test(input)) {
+      //   return ColorType.HSL;
+    } else {
+      return ColorType.UNKNOW;
     }
-    return output;
   }
 
-  private _dispatchActions(
-    type: string,
-    hex: string,
-    selection: vscode.Selection,
-    builder: vscode.TextEditorEdit
-  ) {
-    const colorName = this._nameThatColor.getName(hex);
+  private dispatchActions(param: actionParam) {
+    const { type, color, colorType } = param;
+    const colorName = this.nameThatColor.getName(color, colorType);
+    console.log(
+      "🚀 ~ file: actions.ts ~ line 67 ~ Actions ~ colorName",
+      colorName
+    );
 
-    if (type === "get") {
-      const message = `#${colorName[0]} is ${colorName[1]} or even #${colorName[2]}.`;
-      vscode.window.showInformationMessage(message);
-    } else if (type === "replace") {
-      const startOfSelection =
-        hex.charAt(0) === "#"
-          ? selection.start
-          : selection.start.translate(0, -1);
-      const endOfSelection = selection.end;
-      const extendedSelection = selection.with(
-        startOfSelection,
-        endOfSelection
-      );
-      builder.replace(extendedSelection, `${colorName[2]}`);
-    } else if (type === "sassVar") {
-      const startOfSelection =
-        hex.charAt(0) === "#"
-          ? selection.start
-          : selection.start.translate(0, -1);
-      const endOfSelection = selection.end;
-      builder.insert(startOfSelection, `$${colorName[2]}: `);
-      builder.insert(endOfSelection, ";");
-    } else if (type === "cssVar") {
-      const startOfSelection =
-        hex.charAt(0) === "#"
-          ? selection.start
-          : selection.start.translate(0, -1);
-      const endOfSelection = selection.end;
-      builder.insert(startOfSelection, `--${colorName[2]}: `);
-      builder.insert(endOfSelection, ";");
+    switch (type) {
+      case "get":
+        this.doGetAction(param, colorName);
+        break;
+      case "replace":
+        this.doReplaceAction(param, colorName);
+        break;
+      case "sassVar":
+        this.doSassVarAction(param, colorName);
+        break;
+      case "cssVar":
+        this.doCssVarAction(param, colorName);
+        break;
     }
+  }
+
+  private doGetAction(param: actionParam, colorName: string[]): void {
+    const { colorType, color } = param;
+    const outputColor =
+      colorType === ColorType.HEX ? `#${colorName[0]}` : color;
+    const message = `${outputColor} is ${colorName[1]} (${colorName[2]}).`;
+    vscode.window.showInformationMessage(message);
+  }
+
+  private doReplaceAction(param: actionParam, colorName: string[]): void {
+    const { colorType, color, selection, builder } = param;
+    const { start, end } = this.getSelectionBounds(color, selection, colorType);
+    const extendedSelection = selection.with(start, end);
+    builder.replace(extendedSelection, `${colorName[2]}`);
+  }
+
+  private doSassVarAction(param: actionParam, colorName: string[]): void {
+    const { colorType, color, selection, builder } = param;
+    const { start, end } = this.getSelectionBounds(color, selection, colorType);
+    builder.insert(start, `$${colorName[2]}: `);
+    builder.insert(end, ";");
+  }
+
+  private doCssVarAction(param: actionParam, colorName: string[]): void {
+    const { colorType, color, selection, builder } = param;
+    const { start, end } = this.getSelectionBounds(color, selection, colorType);
+    builder.insert(start, `--${colorName[2]}: `);
+    builder.insert(end, ";");
+  }
+
+  private getSelectionBounds(
+    color: string,
+    selection: vscode.Selection,
+    colorType: ColorType
+  ): SelectionBounds {
+    let start;
+    if (colorType === ColorType.HEX) {
+      start =
+        color.charAt(0) === "#"
+          ? selection.start
+          : selection.start.translate(0, -1);
+    } else {
+      start = selection.start;
+    }
+    const end = selection.end;
+    return { start, end };
   }
 }
-
-export default Actions;
