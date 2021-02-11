@@ -21,6 +21,10 @@ export class Actions {
       for (const selection of selections) {
         const color = editor.document.getText(selection);
         const colorType = this.getColorType(color);
+        console.log(
+          "🚀 ~ file: actions.ts ~ line 24 ~ Actions ~ editor.edit ~ colorType",
+          colorType
+        );
 
         if (colorType === ColorType.UNKNOW) {
           const message = `Sorry but '${color}' is not a valid color representation. Supported values are hex and RGB.`;
@@ -38,7 +42,7 @@ export class Actions {
     const hexPattern = /(^#?[a-f\d]{6}$)|(^#?[a-f\d]{3}$)/i;
 
     // rgb(0,0,0) or rgb(0 0 0) + 0-255
-    const rgbPattern = /^rgb\((0|255|25[0-4]|2[0-4]\d|1\d\d|0?\d?\d)[, ](0|255|25[0-4]|2[0-4]\d|1\d\d|0?\d?\d)[, ](0|255|25[0-4]|2[0-4]\d|1\d\d|0?\d?\d)([, ](0?(\.\d)?|1(\.0)?))?\)$/i;
+    const rgbPattern = /^rgb\((0|255|25[0-4]|2[0-4]\d|1\d\d|0?\d?\d)[, ](0|255|25[0-4]|2[0-4]\d|1\d\d|0?\d?\d)[, ](0|255|25[0-4]|2[0-4]\d|1\d\d|0?\d?\d)\)$/i;
     // const hslPattern = /^hsl\((0|360|35\d|3[0-4]\d|[12]\d\d|0?\d?\d),(0|100|\d{1,2})%,(0|100|\d{1,2})%\)$/i;
 
     if (hexPattern.test(input)) {
