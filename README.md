@@ -2,6 +2,12 @@
 
 A VS Code Plugin to convert hex or rgb color representation into friendly names built upon Chirag Mehta's [ntc.js](http://chir.ag/projects/ntc/).
 
+![Badge for version for Visual Studio Code extension Name That Color](https://vsmarketplacebadge.apphb.com/version/guillaumedoutriaux.name-that-color.svg?color=blue&style=flat-square&logo=visual-studio-code)
+![Installs](https://vsmarketplacebadge.apphb.com/installs-short/guillaumedoutriaux.name-that-color.svg?color=blue&style=flat-square)
+![Downloads](https://vsmarketplacebadge.apphb.com/downloads-short/guillaumedoutriaux.name-that-color.svg?color=blue&style=flat-square)
+
+![MIT License](https://img.shields.io/github/license/guillaumedoutriaux/name-that-color?color=blue&style=flat-square)
+
 ## Features
 
 - Get a friendly name from color representation
