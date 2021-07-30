@@ -19,16 +19,54 @@ export class Actions {
     editor.edit((builder) => {
       const selections: vscode.Selection[] = editor.selections;
       for (const selection of selections) {
-        const color = editor.document.getText(selection);
-        const colorType = this.getColorType(color);
+        const editorContent = editor.document.getText(selection);
 
+        // Block Selection
+        const isMultiline = editorContent.includes("\n");
+        if (isMultiline) {
+          const multilineContent = editorContent.split("\n");
+          const editorContentUpdated = multilineContent
+            .map((line) => {
+              const item = line.split(" ").join("");
+              const colorType = this.getColorType(item);
+              const colorName = this.nameThatColor.getName(item, colorType);
+              return `$${colorName[2]} : #${colorName[0]};`;
+              // this.dispatchActions({
+              //   type: "newline",
+              //   color: line,
+              //   colorType,
+              //   selection,
+              //   builder,
+              // });
+            })
+            .join("\n");
+
+          const doc = vscode.window.activeTextEditor.document;
+          builder.replace(
+            new vscode.Range(
+              doc.lineAt(0).range.start,
+              doc.lineAt(doc.lineCount - 1).range.end
+            ),
+            editorContentUpdated
+          );
+          break;
+        }
+
+        // Multiline Selection
+        const colorType = this.getColorType(editorContent);
         if (colorType === ColorType.UNKNOW) {
-          const message = `Sorry but '${color}' is not a valid color representation. Supported values are hex and RGB.`;
+          const message = `Sorry but '${editorContent}' is not a valid color representation. Supported values are hex and RGB.`;
           vscode.window.showErrorMessage(message);
           return;
         }
 
-        this.dispatchActions({ type, color, colorType, selection, builder });
+        this.dispatchActions({
+          type,
+          color: editorContent,
+          colorType,
+          selection,
+          builder,
+        });
       }
     });
   }
@@ -54,6 +92,10 @@ export class Actions {
   }
 
   private dispatchActions(param: actionParam) {
+    console.log(
+      "🚀 ~ file: actions.ts ~ line 82 ~ Actions ~ dispatchActions ~ param",
+      param
+    );
     const { type, color, colorType } = param;
     const colorName = this.nameThatColor.getName(color, colorType);
 
@@ -69,6 +111,9 @@ export class Actions {
         break;
       case "cssVar":
         this.doCssVarAction(param, colorName);
+        break;
+      case "newline":
+        this.doNewlinAction(param, colorName);
         break;
     }
   }
@@ -100,6 +145,17 @@ export class Actions {
     const { start, end } = this.getSelectionBounds(color, selection, colorType);
     builder.insert(start, `--${colorName[2]}: `);
     builder.insert(end, ";");
+  }
+
+  private doNewlinAction(param: actionParam, colorName: string[]): void {
+    const { selection, builder } = param;
+    console.log(
+      "🚀 ~ file: actions.ts ~ line 136 ~ Actions ~ doNewlinAction ~ selection",
+      selection
+    );
+    builder.delete(selection);
+    //builder.insert(selection.start, `$${colorName[2]}: ${colorName[1]}`);
+    // builder.insert(selection., ";");
   }
 
   private getSelectionBounds(
