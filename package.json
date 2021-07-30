@@ -69,6 +69,16 @@
             "Use underscore (_) in variables names (e.g. $my_var_name)"
           ],
           "description": "Replacement character used for variables names"
+        },
+        "name-that-color.variablePrefix": {
+          "type": "string",
+          "default": "",
+          "description": "Prefix used for all variable names. Leave blank to ignore."
+        },
+        "name-that-color.variableSuffix": {
+          "type": "string",
+          "default": "",
+          "description": "Suffix used for all variables names. Leave blank to ignore."
         }
       }
     }

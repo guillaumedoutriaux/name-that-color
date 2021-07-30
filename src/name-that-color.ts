@@ -1,5 +1,5 @@
 import { ColorType } from "./models";
-import { utilSlugify } from "./util-slugify";
+import { addPrefixSuffix, utilSlugify } from "./util-slugify";
 
 // adapted from ntc.js from Chirag Mehta
 // http://chir.ag/projects/ntc/
@@ -1648,7 +1648,7 @@ export class NameThatColor {
 
     const hex = this.names[cl][0];
     const realName = this.names[cl][1];
-    const friendlyName = utilSlugify(this.names[cl][1]);
+    const friendlyName = addPrefixSuffix(utilSlugify(this.names[cl][1]));
     const output = [hex, realName, friendlyName];
     return output;
   }
