@@ -58,6 +58,10 @@ A VS Code Plugin to convert hex or rgb color representation into friendly names 
 
 ![choose variable delimiter](https://github.com/guillaumedoutriaux/name-that-color/raw/master/images/settings-delimiter.gif)
 
+> Tip: You can add a prefix and/or a suffix to variables.
+
+![add variable prefix or suffix](https://github.com/guillaumedoutriaux/name-that-color/raw/master/images/prefix-suffix.png)
+
 > Tip: You can use both Hex and RGB colors.
 
 ![hexadecimal and rgb colors are supported](https://github.com/guillaumedoutriaux/name-that-color/raw/master/images/feature-rgb.gif)
