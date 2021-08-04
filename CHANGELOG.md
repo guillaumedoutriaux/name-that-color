@@ -1,5 +1,9 @@
 ## Changelog
 
+### 0.1.5
+
+Add option to include a prefix and/or suffix to variables names.
+
 ### 0.1.4
 
 Add rgb support.
