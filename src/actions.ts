@@ -18,53 +18,61 @@ export class Actions {
 
     editor.edit((builder) => {
       const selections: vscode.Selection[] = editor.selections;
+
       for (const selection of selections) {
         const editorContent = editor.document.getText(selection);
-
-        // Block Selection
+        const args = { type, editorContent, selection, builder };
         const isBlockSelection = editorContent.includes("\n");
+
         if (isBlockSelection) {
-          this.processBlockSelection(builder, selection, editorContent);
+          this.processBlockSelection(args);
         } else {
-          this.processMultiSelection({
-            type,
-            editorContent,
-            selection,
-            builder,
-          });
+          this.processMultiSelection(args);
         }
       }
     });
   }
 
-  private processBlockSelection(
-    builder: vscode.TextEditorEdit,
-    selection: vscode.Selection,
-    editorContent: string
-  ): void {
+  private processBlockSelection(param: Omit<actionParam, "colorType">): void {
+    const { type, editorContent, selection, builder } = param;
     const blockSelectionContent = editorContent.split("\n");
-    const editorContentUpdated = blockSelectionContent
+    const editorContentTransformed = blockSelectionContent
       .map((line) => {
         const item = line.split(" ").join("");
         const colorType = this.getColorType(item);
 
         if (colorType === ColorType.UNKNOW) {
-          return ""; // Not a color so we just leave an empty line
+          return line; // Not a color so we just leave the line as it is
         }
 
         const colorName = this.nameThatColor.getName(item, colorType);
-        return `$${colorName[2]} : #${colorName[0]};`;
-        // this.dispatchActions({
-        //   type: "newline",
-        //   color: line,
-        //   colorType,
-        //   selection,
-        //   builder,
-        // });
+        const params = { ...param, colorType };
+        let output;
+
+        switch (type) {
+          case "get":
+            this.doGetAction(params, colorName);
+            output = line;
+            break;
+          case "replace":
+            output = colorName[2];
+            break;
+          case "sassVar":
+            output = `$${colorName[2]} : #${colorName[0]};`;
+            break;
+          case "cssVar":
+            output = `--${colorName[2]} : #${colorName[0]};`;
+            break;
+          default:
+            output = line;
+            break;
+        }
+
+        return output;
       })
       .join("\n");
 
-    builder.replace(selection, editorContentUpdated);
+    builder.replace(selection, editorContentTransformed);
 
     // const doc = vscode.window.activeTextEditor.document;
     // builder.replace(
