@@ -18,22 +18,94 @@ export class Actions {
 
     editor.edit((builder) => {
       const selections: vscode.Selection[] = editor.selections;
+
       for (const selection of selections) {
-        const color = editor.document.getText(selection);
-        const colorType = this.getColorType(color);
+        const editorContent = editor.document.getText(selection);
+        const args = { type, editorContent, selection, builder };
+        const isBlockSelection = editorContent.includes("\n");
 
-        if (colorType === ColorType.UNKNOW) {
-          const message = `Sorry but '${color}' is not a valid color representation. Supported values are hex and RGB.`;
-          vscode.window.showErrorMessage(message);
-          return;
+        if (isBlockSelection) {
+          this.processBlockSelection(args);
+        } else {
+          this.processMultiSelection(args);
         }
-
-        this.dispatchActions({ type, color, colorType, selection, builder });
       }
     });
   }
 
+  private processBlockSelection(param: Omit<actionParam, "colorType">): void {
+    const { type, editorContent, selection, builder } = param;
+    const blockSelectionContent = editorContent.split("\n");
+    const editorContentTransformed = blockSelectionContent
+      .map((line) => {
+        const item = line.split(" ").join("");
+        const colorType = this.getColorType(item);
+
+        if (colorType === ColorType.UNKNOW) {
+          return line; // Not a color so we just leave the line as it is
+        }
+
+        const colorName = this.nameThatColor.getName(item, colorType);
+        const params = { ...param, colorType };
+        let output;
+
+        switch (type) {
+          case "get":
+            this.doGetAction(params, colorName);
+            output = line;
+            break;
+          case "replace":
+            output = colorName[2];
+            break;
+          case "sassVar":
+            output = `$${colorName[2]} : #${colorName[0]};`;
+            break;
+          case "cssVar":
+            output = `--${colorName[2]} : #${colorName[0]};`;
+            break;
+          default:
+            output = line;
+            break;
+        }
+
+        return output;
+      })
+      .join("\n");
+
+    builder.replace(selection, editorContentTransformed);
+
+    // const doc = vscode.window.activeTextEditor.document;
+    // builder.replace(
+    //   new vscode.Range(
+    //     doc.lineAt(0).range.start,
+    //     doc.lineAt(doc.lineCount - 1).range.end
+    //   ),
+    //   editorContentUpdated
+    // );
+  }
+
+  private processMultiSelection(param: Omit<actionParam, "colorType">): void {
+    const { type, editorContent, selection, builder } = param;
+
+    const colorType = this.getColorType(editorContent);
+    if (colorType === ColorType.UNKNOW) {
+      const message = `Sorry but '${editorContent}' is not a valid color representation. Supported values are hex and RGB.`;
+      vscode.window.showErrorMessage(message);
+      return;
+    }
+
+    this.dispatchActions({
+      type,
+      editorContent,
+      colorType,
+      selection,
+      builder,
+    });
+  }
+
   private getColorType(input: string): ColorType {
+    const inputWithoutSpaces = input.split(" ").join("");
+
     // #ccc or #cccccc
     const hexPattern = /(^#?[a-f\d]{6}$)|(^#?[a-f\d]{3}$)/i;
 
@@ -42,9 +114,9 @@ export class Actions {
       /^rgb\((0|255|25[0-4]|2[0-4]\d|1\d\d|0?\d?\d)[, ](0|255|25[0-4]|2[0-4]\d|1\d\d|0?\d?\d)[, ](0|255|25[0-4]|2[0-4]\d|1\d\d|0?\d?\d)\)$/i;
     // const hslPattern = /^hsl\((0|360|35\d|3[0-4]\d|[12]\d\d|0?\d?\d),(0|100|\d{1,2})%,(0|100|\d{1,2})%\)$/i;
 
-    if (hexPattern.test(input)) {
+    if (hexPattern.test(inputWithoutSpaces)) {
       return ColorType.HEX;
-    } else if (rgbPattern.test(input)) {
+    } else if (rgbPattern.test(inputWithoutSpaces)) {
       return ColorType.RGB;
       // } else if (hslPattern.test(input)) {
       //   return ColorType.HSL;
@@ -53,9 +125,9 @@ export class Actions {
     }
   }
 
-  private dispatchActions(param: actionParam) {
-    const { type, color, colorType } = param;
-    const colorName = this.nameThatColor.getName(color, colorType);
+  private dispatchActions(param: actionParam): void {
+    const { type, editorContent, colorType } = param;
+    const colorName = this.nameThatColor.getName(editorContent, colorType);
 
     switch (type) {
       case "get":
@@ -74,30 +146,42 @@ export class Actions {
   }
 
   private doGetAction(param: actionParam, colorName: string[]): void {
-    const { colorType, color } = param;
+    const { colorType, editorContent } = param;
     const outputColor =
-      colorType === ColorType.HEX ? `#${colorName[0]}` : color;
+      colorType === ColorType.HEX ? `#${colorName[0]}` : editorContent;
     const message = `${outputColor} is ${colorName[1]} (${colorName[2]}).`;
     vscode.window.showInformationMessage(message);
   }
 
   private doReplaceAction(param: actionParam, colorName: string[]): void {
-    const { colorType, color, selection, builder } = param;
-    const { start, end } = this.getSelectionBounds(color, selection, colorType);
+    const { colorType, editorContent, selection, builder } = param;
+    const { start, end } = this.getSelectionBounds(
+      editorContent,
+      selection,
+      colorType
+    );
     const extendedSelection = selection.with(start, end);
     builder.replace(extendedSelection, `${colorName[2]}`);
   }
 
   private doSassVarAction(param: actionParam, colorName: string[]): void {
-    const { colorType, color, selection, builder } = param;
-    const { start, end } = this.getSelectionBounds(color, selection, colorType);
+    const { colorType, editorContent, selection, builder } = param;
+    const { start, end } = this.getSelectionBounds(
+      editorContent,
+      selection,
+      colorType
+    );
     builder.insert(start, `$${colorName[2]}: `);
     builder.insert(end, ";");
   }
 
   private doCssVarAction(param: actionParam, colorName: string[]): void {
-    const { colorType, color, selection, builder } = param;
-    const { start, end } = this.getSelectionBounds(color, selection, colorType);
+    const { colorType, editorContent, selection, builder } = param;
+    const { start, end } = this.getSelectionBounds(
+      editorContent,
+      selection,
+      colorType
+    );
     builder.insert(start, `--${colorName[2]}: `);
     builder.insert(end, ";");
   }
@@ -109,8 +193,9 @@ export class Actions {
   ): SelectionBounds {
     let start;
     if (colorType === ColorType.HEX) {
+      const colorWithoutSpaces = color.split(" ").join("");
       start =
-        color.charAt(0) === "#"
+        colorWithoutSpaces.charAt(0) === "#"
           ? selection.start
           : selection.start.translate(0, -1);
     } else {

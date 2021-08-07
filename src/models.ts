@@ -14,7 +14,7 @@ export interface SelectionBounds {
 
 export interface actionParam {
   type: string;
-  color: string;
+  editorContent: string;
   colorType: ColorType;
   selection: vscode.Selection;
   builder: vscode.TextEditorEdit;
