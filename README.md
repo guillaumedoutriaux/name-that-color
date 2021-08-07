@@ -13,7 +13,7 @@ A VS Code Plugin to convert hex or rgb color representation into friendly names 
 - Get a friendly name from color representation
 - Generate Sass or CSS variables name from color representation
 - Deals with close color representations (return the same name)
-- Works with single or multiple selections
+- Works with single, multiple and block selections
 - Works with Hex and RGB
 
 ## Usage
@@ -50,7 +50,7 @@ A VS Code Plugin to convert hex or rgb color representation into friendly names 
 
 ![feature generate css variable](https://github.com/guillaumedoutriaux/name-that-color/raw/master/images/feature-cssvar.gif)
 
-> Tip: It works for multiple selection as well.
+> Tip: It works for single, multiple and block selection as well.
 
 ![feature multiple selection](https://github.com/guillaumedoutriaux/name-that-color/raw/master/images/feature-multiple.gif)
 

@@ -1,5 +1,9 @@
 ## Changelog
 
+### 0.1.6
+
+Add support for block selections.
+
 ### 0.1.5
 
 Add option to include a prefix and/or suffix to variables names.
