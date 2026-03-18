@@ -4,6 +4,7 @@
   "description": "Get a friendly name from a Hex color representation.",
   "version": "0.1.6",
   "publisher": "guillaumedoutriaux",
+  // "publisher": "doutriauxguillaume", // VSIX
   "license": "SEE LICENSE IN LICENSE.md",
   "icon": "images/icon.png",
   "repository": {
